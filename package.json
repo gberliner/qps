@@ -13,5 +13,10 @@
     "@babel/preset-typescript": "^7.3.3",
     "@types/chrome": "0.0.82",
     "webextension-toolbox": "latest"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-typescript"
+    ]
   }
 }
