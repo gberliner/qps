@@ -40,15 +40,17 @@
     }
   ],
   "permissions": [
-    "browserSettings",
     "contextMenus",
-    "contextualIdentities",
     "identity",
-    "menus",
     "notifications",
     "printerProvider",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "https://*/",
+    "https://tinyurl.com/",
+    "https://www.googleapis.com/",
+    "http://tinyurl.com/",
+    "http://www.googleapis.com/"
   ],
   "oauth2": {
     "client_id": "908093233941-0j2cam42nd0972vg73i5n9li9c1pq5bj.apps.googleusercontent.com",

@@ -3,20 +3,24 @@
   "version": "0.0.1",
   "description": "Save webpages to your Google Drive",
   "scripts": {
-    "dev": "npm run compilets && webextension-toolbox dev chrome",
-    "build": "npm run compilets && webextension-toolbox build chrome",
+    "dev": "npm run compilets && webextension-toolbox dev -d chrome chrome",
+    "build": "npm run compilets && webextension-toolbox build -m -d chrome chrome",
     "compilets": "babel -x .ts,.tsx -d app/scripts app/scripts"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
     "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
     "@babel/preset-typescript": "^7.3.3",
     "@types/chrome": "0.0.82",
     "webextension-toolbox": "latest"
   },
   "babel": {
     "presets": [
-      "@babel/preset-typescript"
+      "@babel/preset-typescript",
+      ["@babel/preset-env", {
+        "targets": "last 3 Chrome versions"
+      }]
     ]
   }
 }

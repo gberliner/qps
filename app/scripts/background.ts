@@ -112,4 +112,41 @@ chrome.printerProvider.onPrintRequested
     }
   })
 })
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse)=>{
+  
+  if (!!message.checkUrl) {
+    (async ()=> {
+      let response: Response;
+      let responseJson;
+      let validUrl = message.validUrl
+      console.log("checkurl parameter sent, event listener attempting fetch for ", validUrl)
+      try {
+        response = await fetch("https://tinyurl.com/" + validUrl, {
+            method: "GET"
+          });
+        console.log("completed fetch")
+        if (response.status !== 404) {
+  
+          sendResponse({
+            error: "not available"
+          })
+        }
+        let msg = {
+          success: "url available"
+        }
+        console.log('sending response, ', msg)
+        sendResponse(msg)
+        //alert('submitted');
+      } catch(rejectedReason) {
+        console.log("Failed to fetch url, ", rejectedReason)
+        console.log("Url was tinyurl.com")
+        sendResponse({
+          error: "fetch failed: " + rejectedReason
+        })
+      }      
+    })()
+    return true
+  }
+})
 console.log(`'Allo 'Allo! Event Page`)
