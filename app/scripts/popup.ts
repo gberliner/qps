@@ -1,52 +1,80 @@
+import {Client} from "chomex"
+const tinyUrl = "https://tinyurl.com/"
 let sf = document.querySelector("#submitform")
 let docTitle: HTMLInputElement = document.querySelector("#docname")
 let docUrl: HTMLInputElement = document.querySelector("#memlink")
-async function checkUrl() {
+let bg = chrome.extension.getBackgroundPage()
+let client = new Client(chrome.runtime)
+const bgPage = chrome.extension.getBackgroundPage()
+
+interface CheckUrl {
+    success?: string
+    error?: string
+}
+function checkUrl() {
     // make sure the requested url is available
+    let res: CheckUrl
     let validUrl = docUrl.value
     let invalidUrl = validUrl
 
     let containsInvalidChars = invalidUrl.match(/[^0-9a-zA-Z-_]/)
     if (!!containsInvalidChars) {
-      return new Promise<any>((resolve,reject)=>{
-          reject(`Your URL ${invalidUrl} is malformed (should contain only alphanumerics and dash '-' or underscore '_')`)
+      return ({
+          error: `Your URL ${invalidUrl} is malformed (should contain only alphanumerics and dash '-' or underscore '_')`
       })
     }
-    console.log(`checking url ${validUrl} with background script`)
-    return new Promise<any> ( (resolve,reject) => {
-        chrome.runtime.sendMessage({
-            checkUrl: true,
-            validUrl,
-    
-        },(respMsg)=>{
-            console.log("receiving responsemsg, ", respMsg)
-            if (!!respMsg && !!respMsg.success) {
-                resolve(respMsg)
-            } else {
-                reject(respMsg)
-            }
-        })
-    });
+    console.log(`checking url ${validUrl} with background script`);
+    // (async()=>{
+    //     let resp: Response
+    //     try {
+    //         resp = await fetch(tinyUrl+validUrl,{
+    //             method: 'GET'
+    //         })
+    //         if (resp.status === 404) {
+    //             res = {
+    //                 success: `URL ${validUrl} available`
+    //             }
+    //         } else {
+    //             res = {
+    //                 error: `URL ${validUrl} not available or could not be verified`
+    //             }
+    //         }
+    //     } catch (reason) {
+    //         res = {
+    //             error: `Problem verifying URL, ${chrome.runtime.lastError}`
+    //         }
+    //     }
+    // })()
+    let xhr = new XMLHttpRequest
+    xhr.open('GET', tinyUrl+validUrl,false)
+    xhr.send()
+    if (xhr.status === 404) {
+        res = {
+            success: "URL available"
+        }
+
+    } else {
+        res = {
+            error: "URL UNAVAILABLE"
+        }
+    }
+    return res
 }
 sf.addEventListener('submit',  () => {
-    (async ()=>{
-        let resp
-        try {
-            resp = await checkUrl()
-            if (!!resp && !!resp.success) {
-                alert(`sucess, ${resp.success}`)
-            } else {
-                alert(`got weird message, ${resp}`)
-            }
-        } catch (reason) {
-            if (!!reason && !!reason.error) {
-                alert(`something bad happened, ${reason.error}`)
+    let resp = checkUrl()
     
-            } else {
-                alert(`something bad happened, ${reason}`)
-    
-            }
+
+    if (!!resp) {
+        if (!!resp.success) {
+            alert(resp.success)
+            window.close()
+        } else if (!!resp.error) {
+            alert(resp.error)
+        } else {
+            let jsonstr = JSON.stringify(resp)
+            alert(`weird message: ${jsonstr}`)
         }
-    })()
-    return true
+    } else {
+        alert(`Bad response returned from checkUrl, error ${chrome.runtime.lastError}`)
+    }
 })

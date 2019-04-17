@@ -18,9 +18,15 @@
   "babel": {
     "presets": [
       "@babel/preset-typescript",
-      ["@babel/preset-env", {
-        "targets": "last 3 Chrome versions"
-      }]
+      [
+        "@babel/preset-env",
+        {
+          "targets": "last 3 Chrome versions"
+        }
+      ]
     ]
+  },
+  "dependencies": {
+    "chomex": "^1.0.23"
   }
 }

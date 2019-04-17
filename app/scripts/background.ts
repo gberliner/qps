@@ -1,3 +1,5 @@
+import {Router} from "chomex"
+const tinyUrl = "https://tinyurl.com/"
 class BackgroundSettings {
   constructor() {
     
@@ -8,6 +10,36 @@ class BackgroundSettings {
 
 let currentSettings = new BackgroundSettings
 
+interface CheckUrlResult {
+  success?:string
+  error?:string
+}
+const router = new Router;
+router.on("/url/available",msg=>{
+    let res: CheckUrlResult
+    
+    fetch(tinyUrl + msg.validUrl,{
+      method: "GET"
+    }).then((resp)=>{
+      res = {
+        success: ""
+      }
+      if (resp.status === 404) {
+        res.success = `URL ${msg.validUrl} available`
+      } else {
+        res = {
+          error: `URL ${msg.validUrl} UNAVAILABLE`
+        }
+      }
+    }).catch((reason)=>{
+      res = {
+        error: `Problem checking URL ${msg.validUrl}`
+      }
+    });
+    return res;
+  }
+)
+// chrome.runtime.onMessage.addListener(router.listener());
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('previousVersion', details.previousVersion)
 })
@@ -22,6 +54,11 @@ chrome.printerProvider.onGetPrintersRequested.addListener((chromeCallback)=>{
   chromeCallback(piArray)
 })
 
+chrome.runtime.onConnect.addListener((port)=>{
+  if (port.name === "checkUrl") {
+    
+  }
+})
 
 chrome.printerProvider.onGetCapabilityRequested.addListener((printerId,chromeCallback)=>{
   let cdd = {
@@ -113,40 +150,31 @@ chrome.printerProvider.onPrintRequested
   })
 })
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse)=>{
-  
-  if (!!message.checkUrl) {
-    (async ()=> {
-      let response: Response;
-      let responseJson;
-      let validUrl = message.validUrl
-      console.log("checkurl parameter sent, event listener attempting fetch for ", validUrl)
-      try {
-        response = await fetch("https://tinyurl.com/" + validUrl, {
-            method: "GET"
-          });
-        console.log("completed fetch")
-        if (response.status !== 404) {
-  
-          sendResponse({
-            error: "not available"
-          })
-        }
-        let msg = {
-          success: "url available"
-        }
-        console.log('sending response, ', msg)
-        sendResponse(msg)
-        //alert('submitted');
-      } catch(rejectedReason) {
-        console.log("Failed to fetch url, ", rejectedReason)
-        console.log("Url was tinyurl.com")
-        sendResponse({
-          error: "fetch failed: " + rejectedReason
-        })
-      }      
-    })()
-    return true
+function checkUrl(url) {
+  let xhr = new XMLHttpRequest
+  xhr.open('GET', tinyUrl + url,false)
+  xhr.send()
+  if (xhr.status === 404) {
+    return ({success: `ÙRL ${url} available`})
+  } else {
+    return ({error: `URL ${url} UNAVAILABLE or error getting status`})
   }
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse)=>{
+  if (!!message && !!message.checkUrl) {
+    let xhr = new XMLHttpRequest
+    xhr.open('GET',tinyUrl+message.validUrl,false)
+    xhr.send()
+    if (xhr.status === 404) {
+      sendResponse({
+        success: `URL ${message.validUrl} is available`
+      })
+    } else {
+      sendResponse({
+        error: `URL ${message.validUrl} is UNAVAILABLE or could not be checked`
+      })
+    }
+  }
+  return true
 })
-console.log(`'Allo 'Allo! Event Page`)
