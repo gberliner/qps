@@ -1,4 +1,3 @@
-import {Router} from "chomex"
 const tinyUrl = "https://tinyurl.com/"
 class BackgroundSettings {
   constructor() {
@@ -9,37 +8,10 @@ class BackgroundSettings {
 }
 
 let currentSettings = new BackgroundSettings
-
 interface CheckUrlResult {
   success?:string
   error?:string
 }
-const router = new Router;
-router.on("/url/available",msg=>{
-    let res: CheckUrlResult
-    
-    fetch(tinyUrl + msg.validUrl,{
-      method: "GET"
-    }).then((resp)=>{
-      res = {
-        success: ""
-      }
-      if (resp.status === 404) {
-        res.success = `URL ${msg.validUrl} available`
-      } else {
-        res = {
-          error: `URL ${msg.validUrl} UNAVAILABLE`
-        }
-      }
-    }).catch((reason)=>{
-      res = {
-        error: `Problem checking URL ${msg.validUrl}`
-      }
-    });
-    return res;
-  }
-)
-// chrome.runtime.onMessage.addListener(router.listener());
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('previousVersion', details.previousVersion)
 })
@@ -162,19 +134,58 @@ function checkUrl(url) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse)=>{
+  if (!!message && !!message.randomMsg) {
+    console.log("received randommsg request in background listener")
+    sendResponse({
+      randomResponse: "09-09iokm;lkasdf"
+    })
+    return true
+  }
   if (!!message && !!message.checkUrl) {
+    console.log("received message inside background listener")
+    if (true) {
+      sendResponse({
+        success: "background:itsallaok"
+      })
+      return true
+    }
     let xhr = new XMLHttpRequest
     xhr.open('GET',tinyUrl+message.validUrl,false)
-    xhr.send()
-    if (xhr.status === 404) {
-      sendResponse({
-        success: `URL ${message.validUrl} is available`
-      })
-    } else {
-      sendResponse({
-        error: `URL ${message.validUrl} is UNAVAILABLE or could not be checked`
-      })
+    try {
+      xhr.send()
+    } catch (reason) {
+      let reasonToPrint = reason
+      if (typeof reason === 'object') {
+        reasonToPrint = JSON.stringify(reason)
+      }
+      console.log("caught exception in background during xhr.send, ", reasonToPrint)
+    } finally {
+      if (!!chrome.runtime.lastError) {
+        console.log("error checked in background xhr: " + chrome.runtime.lastError)
+      } else {
+        console.log("lastError not set during background xhr")
+      }
+      if (!!xhr && xhr.status === 404) {
+        
+        console.log("attempting to sendResponse from background, status 404..")
+        sendResponse({
+          success: `URL ${message.validUrl} is available (via background)`
+        })
+      } else {
+        let status = ""
+        if (!!xhr && !!xhr.status) {
+          status = xhr.status.toLocaleString()
+        }
+        if (!!xhr && !!xhr.statusText) {
+          status += xhr.statusText
+        }
+        console.log("attempting to sendResponse from background, status NOT 404." + "(" + status + ")")
+        sendResponse({
+          error: `URL ${message.validUrl} is UNAVAILABLE or could not be checked (via background)`
+        })
+      }
+      return true  
     }
   }
-  return true
+  //return true
 })
