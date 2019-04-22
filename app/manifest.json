@@ -1,60 +1,33 @@
 {
-  "name": "Quick Page Saver",
-  "short_name": "Page Saver",
-  "description": "Save webpages to your Google Drive",
-  "version": "0.0.0",
-  "manifest_version": 2,
-  "default_locale": "en",
-  "icons": {
-    "16": "images/icon-16.png",
-    "128": "images/icon-128.png"
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Window manipulator",
+    "default_popup": "pages/popup.html",
+    "default_icon": {
+      "19": "icons/window19.png",
+      "38": "icons/window38.png"
+    }
   },
   "background": {
     "scripts": [
-      "scripts/background.js"
+      "scripts/background-new.js"
     ],
-    "persistent": false
+    "persistent": true
   },
-  "browser_action": {
-    "default_title": "Quick Page Saver",      
-    "default_popup": "pages/popup.html"       
+  "icons": {
+    "48": "icons/window.png",
+    "96": "icons/window@2x.png"
   },
-  "options_page": "pages/options.html",
-  "options_ui": {
-    "page": "pages/options.html",
-    "chrome_style": true
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "http://*/*",
-        "https://*/*"
-      ],
-      "css": [
-        "styles/contentscript.css"
-      ],
-      "js": [
-        "scripts/contentscript.js"
-      ],
-      "run_at": "document_end",
-      "all_frames": false
-    }
-  ],
+  "description": "A list of methods you can perform on a window.",
+  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/window-manipulator",
+  "manifest_version": 2,
+  "name": "Window manipulator",
   "permissions": [
-    "contextMenus",
-    "identity",
-    "notifications",
-    "printerProvider",
     "https://*/",
     "https://tinyurl.com/",
     "https://www.googleapis.com/",
     "http://tinyurl.com/",
     "http://www.googleapis.com/"
   ],
-  "oauth2": {
-    "client_id": "908093233941-0j2cam42nd0972vg73i5n9li9c1pq5bj.apps.googleusercontent.com",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.file"
-    ]
-  }
+  "version": "1.0"
 }
