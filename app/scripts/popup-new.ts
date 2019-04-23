@@ -126,9 +126,16 @@ document.querySelector("#insertstuff").addEventListener('submit',(event)=>{
       textnode = document.createTextNode(urlCheckStr)
       listitem.appendChild(textnode)
       theList.appendChild(listitem)
-      alert('something went right')
+      alert(`something went right: ${urlCheck.success}`)
     } catch (reason) {
-      alert('something went wrong');
+      if (reason.error) {
+        alert(`something went wrong: ${reason.error}`);
+      } else if (reason.message) {
+        alert(`something went wrong: ${reason.message}`);
+      } else {
+        alert(`omething went wrong: ${reason}`)
+      }
+
       console.log("caught exception in popup listener, ", reason);
       if (typeof reason === 'object') {
         textnode = document.createTextNode("rejection:"+JSON.stringify(reason))

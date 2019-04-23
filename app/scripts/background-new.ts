@@ -12,14 +12,14 @@ function doFetch(url) {
     }).catch(reason=>{
         if (typeof reason === 'string') {
             console.log(`caught rejection in doFetch: ${reason}`)
-
-            throw({error: `URL ${url}: could not verify (${reason})`})
+            throw new Error(reason)
         } else {
             if (reason.error) {
                 reason.error += " (passed through catch)"
+                throw new Error(reason.error)
             }
             console.log('caught rejection in doFetch: ', reason)
-            throw(reason)
+            throw new Error(reason.message)
         }
     })
 }
