@@ -5,15 +5,21 @@ function doFetch(url) {
         method: 'GET'
     }).then((resp)=>{
         if (resp.status === 404) {
-            return(Promise.resolve({success: `URL ${url} is available`}))
+            return (Promise.resolve({success: `URL ${url} is available`}))
         } else {
-            return Promise.reject({error: `URL ${url} unavailable`})
+            throw ({error: `URL ${url} unavailable`})
         }
     }).catch(reason=>{
         if (typeof reason === 'string') {
-            return ({error: `URL ${url}: could not verify (${reason})`})
+            console.log(`caught rejection in doFetch: ${reason}`)
+
+            throw({error: `URL ${url}: could not verify (${reason})`})
         } else {
-            return reason
+            if (reason.error) {
+                reason.error += " (passed through catch)"
+            }
+            console.log('caught rejection in doFetch: ', reason)
+            throw(reason)
         }
     })
 }

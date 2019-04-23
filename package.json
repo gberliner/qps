@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npm run compilets && webextension-toolbox dev -d chrome chrome",
     "build": "npm run compilets && webextension-toolbox build -m -d chrome chrome",
+    "build-ff": "npm run compilets && webextension-toolbox build -m -d firefox firefox",
     "compilets": "babel -x .ts,.tsx -d app/scripts app/scripts"
   },
   "devDependencies": {

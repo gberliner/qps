@@ -110,7 +110,7 @@ document.querySelector("#insertstuff").addEventListener('submit',(event)=>{
   let theList = document.querySelector("#thelist")
 
   let listitem = document.createElement('li')
-  let url = document.querySelector("#stufftoinsert").value
+  let url = (document.querySelector("#stufftoinsert") as HTMLInputElement).value
 
   let urlCheck
   let urlCheckStr
@@ -126,14 +126,15 @@ document.querySelector("#insertstuff").addEventListener('submit',(event)=>{
       textnode = document.createTextNode(urlCheckStr)
       listitem.appendChild(textnode)
       theList.appendChild(listitem)
+      alert('something went right')
     } catch (reason) {
+      alert('something went wrong');
+      console.log("caught exception in popup listener, ", reason);
       if (typeof reason === 'object') {
-        textnode = document.createTextNode(JSON.stringify(reason))
-        alert(JSON.stringify(reason))
+        textnode = document.createTextNode("rejection:"+JSON.stringify(reason))
 
       } else {
-        textnode = document.createTextNode(reason)
-        alert(reason)
+        textnode = document.createTextNode("rejection:"+reason)
       }
       listitem.appendChild(textnode)
       theList.appendChild(listitem)

@@ -8,6 +8,7 @@
       "38": "icons/window38.png"
     }
   },
+  "default_locale": "en",
   "background": {
     "scripts": [
       "scripts/background-new.js"
