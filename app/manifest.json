@@ -4,8 +4,8 @@
     "default_title": "Quick Page Saver",
     "default_popup": "pages/popup.html",
     "default_icon": {
-      "19": "icons/window19.png",
-      "38": "icons/window38.png"
+      "19": "images/qps19x19.png",
+      "38": "images/qps38x38.png"
     }
   },
   "default_locale": "en",
@@ -16,22 +16,19 @@
     "persistent": true
   },
   "icons": {
-    "48": "icons/window.png",
-    "96": "icons/window@2x.png"
+    "48": "images/qps48x48.png",
+    "96": "images/qps96x96.png"
   },
-  "description": "A list of methods you can perform on a window.",
+  "description": "Save a webpage to your Google Drive.",
   "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/window-manipulator",
   "manifest_version": 2,
-  "name": "Window manipulator",
+  "name": "Quick Page Saver",
   "permissions": [
     "https://*/",
-    "https://tinyurl.com/",
-    "https://www.googleapis.com/",
-    "http://tinyurl.com/",
-    "http://www.googleapis.com/"
+    "http://*/"
   ],
   "oauth2": {
-    "client_id": "908093233941-0j2cam42nd0972vg73i5n9li9c1pq5bj.apps.googleusercontent.com",
+    "client_id": "908093233941-5hjrbgmi08qr99i8hddkiftd4chn4p0p.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/drive.file"
     ]

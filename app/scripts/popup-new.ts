@@ -118,7 +118,7 @@ document.querySelector("#insertstuff").addEventListener('submit',(event)=>{
 
   (async ()=>{
     try {
-      urlCheck = await browser.runtime.sendMessage({url})
+      urlCheck = await browser.runtime.sendMessage({verifyUrl: true, url})
       urlCheckStr = urlCheck
       if (typeof urlCheck === 'object') {
         urlCheckStr = JSON.stringify(urlCheck)
@@ -138,8 +138,11 @@ document.querySelector("#insertstuff").addEventListener('submit',(event)=>{
 
       console.log("caught exception in popup listener, ", reason);
       if (typeof reason === 'object') {
-        textnode = document.createTextNode("rejection:"+JSON.stringify(reason))
-
+        if (reason.message) {
+          textnode = document.createTextNode("rejection:"+reason.message)
+        } else {
+          textnode = document.createTextNode("rejection:"+JSON.stringify(reason))
+        }
       } else {
         textnode = document.createTextNode("rejection:"+reason)
       }
