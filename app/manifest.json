@@ -11,10 +11,12 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "scripts/background-new.js"
+      "scripts/background-new.js",
+      "scripts/printerprovider.js"
     ],
     "persistent": true
   },
+  "content_security_policy": "script-src 'self' https://apis.google.com 'sha256-c9YRlEpUBiYsK7v3qDhOIZD7AerRTFp0HSaXVGfvwWI=' 'sha256-ONw3KetUA7QhrSeH6GzyziPGsqJm2mjC7TEg/uKcxXQ='; object-src 'self' https://apis.google.com; connect-src 'self' https://apis.google.com https://tinyurl.com; style-src 'self' https://apis.google.com;",
   "icons": {
     "48": "images/qps48x48.png",
     "96": "images/qps96x96.png"
@@ -25,10 +27,11 @@
   "name": "Quick Page Saver",
   "permissions": [
     "https://*/",
-    "http://*/"
+    "http://*/",
+    "printerProvider"
   ],
   "oauth2": {
-    "client_id": "908093233941-5hjrbgmi08qr99i8hddkiftd4chn4p0p.apps.googleusercontent.com",
+    "client_id": "908093233941-9iqa0vkpaucl562uaejqvpas8scn5vb7.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/drive.file"
     ]

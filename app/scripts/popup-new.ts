@@ -123,9 +123,9 @@ document.querySelector("#insertstuff").addEventListener('submit',(event)=>{
       if (typeof urlCheck === 'object') {
         urlCheckStr = JSON.stringify(urlCheck)
       }
-      textnode = document.createTextNode(urlCheckStr)
-      listitem.appendChild(textnode)
-      theList.appendChild(listitem)
+      // textnode = document.createTextNode(urlCheckStr)
+      // listitem.appendChild(textnode)
+      // theList.appendChild(listitem)
       alert(`something went right: ${urlCheck.success}`)
     } catch (reason) {
       if (reason.error) {
@@ -146,8 +146,8 @@ document.querySelector("#insertstuff").addEventListener('submit',(event)=>{
       } else {
         textnode = document.createTextNode("rejection:"+reason)
       }
-      listitem.appendChild(textnode)
-      theList.appendChild(listitem)
+      // listitem.appendChild(textnode)
+      // theList.appendChild(listitem)
     }
   })();
 
